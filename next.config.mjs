@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    output: 'export', 
+    basePath: '/ProjektZaliczeniowy_Next', 
+    images: {
+      unoptimized: true, 
+    },
+};
 
-export default nextConfig;
+module.exports = nextConfig;
