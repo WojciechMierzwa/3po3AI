@@ -45,7 +45,7 @@ export default function Navbar({ imageNames }) {
 
                     <div className="flex items-center justify-center sm:items-stretch sm:justify-start">
                         <Link href="/" className="text-2xl font-bold text-white">
-                            3po3Ai
+                            3po3AI
                         </Link>
 
                         <div className="hidden sm:block sm:ml-6">
@@ -54,19 +54,25 @@ export default function Navbar({ imageNames }) {
                                     href="/"
                                     className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                                 >
-                                    Home
+                                    Strona główna
                                 </Link>
                                 <Link
                                     href="/login"
                                     className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                                 >
-                                    Login
+                                    Logowanie
                                 </Link>
                                 <Link
                                     href="/register"
                                     className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                                 >
-                                    Register
+                                    Rejestracja
+                                </Link>
+                                <Link
+                                    href="/register"
+                                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                                >
+                                    Tablica wyników
                                 </Link>
                             </div>
                         </div>

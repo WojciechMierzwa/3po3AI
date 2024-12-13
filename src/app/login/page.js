@@ -40,7 +40,7 @@ export default function Login() {
         <h2 className="text-2xl font-bold text-center mb-4">Logowanie</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Login</label>
             <input
               type="text"
               id="username"
@@ -53,7 +53,7 @@ export default function Login() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Hasło</label>
             <input
               type="password"
               id="password"
@@ -70,10 +70,28 @@ export default function Login() {
               type="submit"
               className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              Log In
+              Zaloguj się
             </button>
+          
+
+          
+          
           </div>
         </form>
+        <button
+            type="submit"
+            className="w-full mb-2 bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center justify-center"
+          >
+            <img src="images/discord.png" alt="Discord" className="h-5 w-5 mr-2" />
+            Discord
+          </button>
+            <button
+              type="submit"
+              className="w-full bg-gray-100 text-black py-2 px-4 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 flex items-center justify-center"
+            >
+              <img src="images/gmail.png" alt="Gmail" className="h-5 w-5 mr-2" />
+              Gmail
+            </button>
       </div>
 
 
