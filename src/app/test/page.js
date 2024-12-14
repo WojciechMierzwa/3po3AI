@@ -1,10 +1,9 @@
-import Emoji from '../components/emoji/emoji'
+import GeminiPrompt from "@/app/components/GeminiPrompt";
 
-export default function Test() {
-    return (
-        <>
-            <Emoji />
-            <p>test</p>
-        </>
-    );
+export default function Home() {
+  return (
+    <div>
+      <GeminiPrompt />
+    </div>
+  );
 }

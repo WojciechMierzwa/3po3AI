@@ -1,8 +1,9 @@
-
+import GeminiPrompt from "@/app/components/GeminiPrompt";
 
 export default function Home() {
   return (
-   
-    <p>start</p>
+    <div>
+      <GeminiPrompt />
+    </div>
   );
 }

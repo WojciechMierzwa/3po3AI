@@ -1,9 +1,7 @@
-/** @type {import('next').NextConfig} */
+// Removing the basePath as it is unnecessary if you're serving from the root
 const nextConfig = {
-  basePath: '/ProjektZaliczeniowy_Next',
   images: {
     unoptimized: true,
   },
 };
-
 export default nextConfig;
