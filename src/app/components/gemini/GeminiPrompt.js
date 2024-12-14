@@ -6,7 +6,7 @@ const GeminiPrompt = () => {
   const [enemy, setEnemy] = useState("papier")
   const [answer, setAnswer] = useState(""); // Stan dla odpowiedzi użytkownika
   const [response, setResponse] = useState(""); // Stan dla odpowiedzi na główne zapytanie
-  const [fact, setFact] = useState(""); // Stan dla losowego faktu
+  const [fact, setFact] = useState("Sprawdź swoją odpowiedź"); // Stan dla losowego faktu
   const [loading, setLoading] = useState(false); // Stan ładowania
   
   const handleSubmit = async (event) => {
@@ -28,7 +28,7 @@ const GeminiPrompt = () => {
       });
   
       const data = await res.json();
-  
+      
       console.log(data.text_content);
       if (res.ok && data?.text_content) {
         setResponse(data.text_content); // Ustawienie odpowiedzi na zapytanie, czy pokona
@@ -65,7 +65,7 @@ const GeminiPrompt = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center mb-4">Czym pokonasz {enemy}?</h2>
-        <h3 className="text-xl font-bold text-center mb-4">Sprawdź swoją odpowiedź</h3>
+        <h3 className="text-xl font-bold text-center mb-4">{fact}</h3>
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <input
@@ -87,16 +87,7 @@ const GeminiPrompt = () => {
           </div>
         </form>
         <div>
-          <h3 className="font-bold">Odpowiedź:</h3>
           <p>{response}</p>
-          
-          {/* Wyświetlanie losowego faktu, jeśli dostępny */}
-          {fact && (
-            <div>
-              <h3 className="font-bold">Losowy fakt:</h3>
-              <p>{fact}</p>
-            </div>
-          )}
         </div>
       </div>
     </div>

@@ -1,9 +1,9 @@
-import GeminiPrompt from "@/app/components/gemini/GeminiPrompt";
+import Next from "@/app/components/youlost/youlost";
 
-export default function Home() {
+export default function Test() {
   return (
     <div>
-      <GeminiPrompt />
+      <Next />
     </div>
   );
 }
