@@ -1,9 +1,9 @@
-import Next from "@/app/components/youlost/youlost";
+
 
 export default function Test() {
   return (
     <div>
-      <Next />
+      <img src="images/thinking.gif" alt="Thinking" className="h-24 w-24 mr-2" />
     </div>
   );
 }

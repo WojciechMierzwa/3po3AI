@@ -9,7 +9,6 @@ export default function Next({ message, fact, stats, onNext }) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center mb-4">{message}</h2>
         <h3 className="text-xl font-bold text-center mb-4">Twój aktualny wynik: {stats}</h3>
         <h2 className="text-l font-bold text-center mb-4">{factText}</h2>
         <button

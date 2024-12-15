@@ -2,10 +2,11 @@
 import React, { useState } from "react";
 
 const GeminiPrompt = ({ enemy, message, onCorrect, onIncorrect }) => {
-  const [answer, setAnswer] = useState(""); // Stan dla odpowiedzi użytkownika
-  const [response, setResponse] = useState(""); // Stan dla odpowiedzi na główne zapytanie
-  const [fact, setFact] = useState("Sprawdź swoją odpowiedź"); // Stan dla losowego faktu
-  const [loading, setLoading] = useState(false); // Stan ładowania
+  const [answer, setAnswer] = useState(""); // State for the user's answer
+  const [response, setResponse] = useState(""); // State for the response message
+  const [fact, setFact] = useState("Sprawdź swoją odpowiedź"); // State for the random fact
+  const [loading, setLoading] = useState(false); // State for loading state
+  const [showGif, setShowGif] = useState(false); // State for showing the thinking GIF
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -17,6 +18,9 @@ const GeminiPrompt = ({ enemy, message, onCorrect, onIncorrect }) => {
     }
 
     setLoading(true);
+    setShowGif(true); // Show the thinking GIF when submitting
+    setResponse(""); // Clear any previous responses
+
     console.log("Rozpoczynanie zapytania do API...");
 
     try {
@@ -36,7 +40,7 @@ const GeminiPrompt = ({ enemy, message, onCorrect, onIncorrect }) => {
         setResponse("Dobra odpowiedź!");
         console.log("Poprawna odpowiedź!");
 
-        const nextEnemy = answer; // Zakładamy, że odpowiedź to nowy przeciwnik
+        const nextEnemy = answer; // Assume the answer is the next opponent
         console.log("Pobieram losowy fakt...");
 
         const factRes = await fetch("/api/gemini", {
@@ -51,8 +55,8 @@ const GeminiPrompt = ({ enemy, message, onCorrect, onIncorrect }) => {
         console.log("Odpowiedź z API faktu:", factData);
 
         if (factRes.ok && factData?.text_content) {
-          setFact(factData.text_content); // Lokalne ustawienie faktu
-          onCorrect(nextEnemy, `Czym pokonasz ${nextEnemy}?`, factData.text_content); // Przekazanie faktu
+          setFact(factData.text_content); // Set the fact locally
+          onCorrect(nextEnemy, `Czym pokonasz ${nextEnemy}?`, factData.text_content); // Pass the fact to the parent
         } else {
           setFact("Nie udało się pobrać faktu. Spróbuj ponownie.");
           setResponse("Nie udało się pobrać faktu. Spróbuj ponownie.");
@@ -68,6 +72,7 @@ const GeminiPrompt = ({ enemy, message, onCorrect, onIncorrect }) => {
       setResponse("Wystąpił błąd. Spróbuj ponownie później.");
     } finally {
       setLoading(false);
+      setShowGif(false); // Hide the thinking GIF
       console.log("Koniec zapytania do API.");
     }
   };
@@ -77,26 +82,35 @@ const GeminiPrompt = ({ enemy, message, onCorrect, onIncorrect }) => {
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center mb-4">Czym pokonasz {enemy}?</h2>
         <h3 className="text-xl font-bold text-center mb-4">{fact}</h3>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-6">
-            <input
-              type="text"
-              placeholder={`Czym pokonasz ${enemy}?`}
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
+        
+        {/* Conditionally render form or GIF */}
+        {showGif ? (
+          <div className="flex justify-center items-center">
+            <img src="images/thinking.gif" alt="Thinking" className="h-24 w-24" />
           </div>
-          <div className="mb-6">
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-300"
-            >
-              {loading ? "Sprawdzam..." : "Sprawdzam"}
-            </button>
-          </div>
-        </form>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div className="mb-6">
+              <input
+                type="text"
+                placeholder={`Czym pokonasz ${enemy}?`}
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div className="mb-6">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-300"
+              >
+                {loading ? "Sprawdzam..." : "Sprawdzam"}
+              </button>
+            </div>
+          </form>
+        )}
+        
         <div>
           <p>{response}</p>
         </div>
