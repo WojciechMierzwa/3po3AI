@@ -10,6 +10,7 @@ export default function Home() {
   const [enemy, setEnemy] = useState("papier"); // Aktualny przeciwnik
   const [message, setMessage] = useState(`Czym pokonasz ${enemy}`); // Pytanie
   const [fact, setFact] = useState(""); // Fakt do wyświetlenia
+  const [emoji, setEmoji] = useState("");
 
   // Funkcja do resetowania gry
   const resetGame = () => {
@@ -18,13 +19,15 @@ export default function Home() {
     setEnemy("papier"); // Pierwszy przeciwnik
     setMessage(`Czym pokonasz papier`); // Pierwsze pytanie
     setFact(""); // Resetowanie faktu
+    setEmoji("");
   };
 
-  const handleCorrectAnswer = (newEnemy, newMessage, newFact) => {
+  const handleCorrectAnswer = (newEnemy, newMessage, newFact, newEmoji) => {
     setScore((prevScore) => prevScore + 1);
     setEnemy(newEnemy);
     setMessage(newMessage);
     setFact(newFact);
+    setEmoji(newEmoji);
     setGameState("next");
   };
 
@@ -46,6 +49,7 @@ export default function Home() {
         stats={score}
         message={message}
         fact={fact}
+        emoji={emoji}
         onNext={handleNextQuestion}
       />
     );

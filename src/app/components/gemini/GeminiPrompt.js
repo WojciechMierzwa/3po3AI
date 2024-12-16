@@ -47,7 +47,7 @@ const GeminiPrompt = ({ enemy, message, onCorrect, onIncorrect }) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            prompt: `Zwróć losowy fakt na temat ${answer}`,
+            prompt: `Zwróć losowy fakt na temat ${answer}, a także dopasuj emoji do ${answer} (emoji daj po znaku #)`,
           }),
         });
 
@@ -111,9 +111,7 @@ const GeminiPrompt = ({ enemy, message, onCorrect, onIncorrect }) => {
           </form>
         )}
         
-        <div>
-          <p>{response}</p>
-        </div>
+       
       </div>
     </div>
   );
