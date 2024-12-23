@@ -39,6 +39,7 @@ export default async function handler(req, res) {
         responseMimeType: "application/json",
       };
 
+      
       const result = await model.generateContent({
         contents: [{ role: "user", parts }],
         generationConfig,
