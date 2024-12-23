@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GeminiPrompt from "@/app/components/gemini/GeminiPrompt";
 import Next from "@/app/components/next/next";
 import YouLost from "@/app/components/youlost/youlost";
@@ -11,11 +11,16 @@ export default function Home() {
   const [message, setMessage] = useState(`Czym pokonasz ${enemy}`); // Pytanie
   const [fact, setFact] = useState(""); // Fakt do wyświetlenia
   const [emoji, setEmoji] = useState("");
+  const [answers, setAnswers] = useState(new Set());
+  
+  useEffect(() => {
+    setAnswers((prevAnswers) => new Set(prevAnswers).add(enemy));
+  }, [enemy]);
 
   // Funkcja do resetowania gry
   const resetGame = () => {
     setGameState("playing"); // Powrót do stanu początkowego
-    setScore(1); // Zresetowanie wyniku
+    setScore(0); // Zresetowanie wyniku
     setEnemy("papier"); // Pierwszy przeciwnik
     setMessage(`Czym pokonasz papier`); // Pierwsze pytanie
     setFact(""); // Resetowanie faktu
@@ -23,7 +28,7 @@ export default function Home() {
   };
 
   const handleCorrectAnswer = (newEnemy, newMessage, newFact, newEmoji) => {
-    setScore((prevScore) => prevScore + 1);
+    setScore(answers.size);
     setEnemy(newEnemy);
     setMessage(newMessage);
     setFact(newFact);
@@ -32,6 +37,8 @@ export default function Home() {
   };
 
   const handleIncorrectAnswer = () => {
+    answers.clear();
+    setAnswers((prevAnswers) => new Set(prevAnswers).add("papier"));
     setGameState("lost");
   };
 
@@ -56,11 +63,34 @@ export default function Home() {
   }
 
   return (
+    <div className="relative">
+  {/* Background answers */}
+  <div className="absolute inset-0 z-0 flex space-x-4 opacity-20 pointer-events-none">
+    {[...answers].map((answer, index) => (
+      <div key={index} className="px-2 py-2 text-base font-arial">
+        {answer}
+      </div>
+    ))}
+  </div>
+
+  {/* Foreground content */}
+  <div className="relative z-10">
     <GeminiPrompt
       enemy={enemy}
       message={message}
       onCorrect={handleCorrectAnswer}
       onIncorrect={handleIncorrectAnswer}
     />
+  </div>
+  <div className="flex space-x-4">
+      {[...answers].map((answer, index) => (
+        <div key={index} className="px-4 py-2 border rounded bg-gray-200 text-base font-normal">
+          {answer}
+        </div>
+      ))}
+    </div>
+</div>
+
+
   );
 }

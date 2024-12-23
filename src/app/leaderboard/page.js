@@ -110,27 +110,10 @@ export default function Leaderboard() {
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
           >
-            Previous
+            Poprzednia
           </button>
 
-          <div className="flex items-center gap-2">
-            {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-              <button
-              key={page}
-              className={`relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ${
-                page === currentPage
-                  ? "border-2 border-black-500 text-black-500" 
-                  : "text-gray-900"
-              }`}
-              onClick={() => goToPage(page)}
-            >
-              <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                {page}
-              </span>
-            </button>
-            
-            ))}
-          </div>
+         
 
           <button
             className="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
@@ -138,7 +121,7 @@ export default function Leaderboard() {
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
-            Next
+            Następna
           </button>
         </div>
       </div>
