@@ -45,9 +45,9 @@ export default function Leaderboard() {
                           ? "text-blue-gray-900 bg-white shadow-md"
                           : "text-blue-gray-500"
                       }`}
-                      onClick={() => setActiveTab(tab)}
+                      onClick={() => { setActiveTab(tab); goToPage(1); }}
                     >
-                      {tab === "week" && "Tydzień"}
+                      {tab === "week" && "Tydzień" }
                       {tab === "month" && "Miesiąc"}
                       {tab === "all-time" && "Najlepsze"}
                     </li>

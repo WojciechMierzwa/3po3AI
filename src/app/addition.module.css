@@ -1,0 +1,15 @@
+.bgtext {
+    position: relative;
+}
+
+.bgtext:after {
+    margin: 3rem;
+    content: "Background text";
+    position: absolute;
+    transform: rotate(300deg);
+    -webkit-transform: rotate(300deg);
+    color: rgb(187, 182, 182);
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
