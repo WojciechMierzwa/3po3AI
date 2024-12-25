@@ -36,11 +36,36 @@ export default function Home() {
     setGameState("next");
   };
 
-  const handleIncorrectAnswer = () => {
-    answers.clear();
-    setAnswers((prevAnswers) => new Set(prevAnswers).add("papier"));
+  const handleIncorrectAnswer = async () => {
+    // Update the answers set
+    setAnswers((prevAnswers) => new Set(prevAnswers).add(enemy));
+    setAnswers(new Set());
+  
+    // Call API to insert the score with "Test User"
+    try {
+      const response = await fetch("/api/insertScore", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          score,
+          date: new Date().toISOString(),
+          user_id: "676bec801df5dfe92749bfe9", // Replace this with the actual user ID
+        }),
+      });
+  
+      if (!response.ok) {
+        console.error("Failed to insert score:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error inserting score:", error);
+    }
+  
+    // Change game state to "lost"
     setGameState("lost");
   };
+  
 
   const handleNextQuestion = () => {
     setGameState("playing");

@@ -1,11 +1,10 @@
-import clientPromise from "@/app/lib/mongodb";
+import clientPromise from "@/lib/mongodb";
 
 export default async function handler(req, res) {
   try {
     const client = await clientPromise;
-    const db = client.db("3po3DB"); // Replace with your database name
+    const db = client.db("3po3DB"); 
 
-    // Retrieve scores with user details using aggregation
     const scores = await db.collection("Scores").aggregate([
       {
         $lookup: {

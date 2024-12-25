@@ -64,6 +64,11 @@ export default function Leaderboard() {
               <tr>
                 <th className="p-4 border-y border-blue-gray-100 bg-blue-gray-50/50">
                   <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                    Miejsce
+                  </p>
+                </th>
+                <th className="p-4 border-y border-blue-gray-100 bg-blue-gray-50/50">
+                  <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
                     Gracz
                   </p>
                 </th>
@@ -78,9 +83,14 @@ export default function Leaderboard() {
               {currentRecords.map((entry, index) => (
                 <tr key={index}>
                   <td className="p-4 border-b border-blue-gray-50">
+                    <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                      {(currentPage - 1) * recordsPerPage + index + 1}
+                    </p>
+                  </td>
+                  <td className="p-4 border-b border-blue-gray-50">
                     <div className="flex items-center gap-3">
                       <img
-                        src={`https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-${index + 1}.jpg`}
+                        src={`images/profiles/pepe.jpg`}
                         alt={entry.player}
                         className="relative inline-block h-9 w-9 !rounded-full object-cover object-center"
                       />
@@ -103,7 +113,7 @@ export default function Leaderboard() {
         </div>
 
         {/* Pagination Controls */}
-        <div className="flex items-center justify-between p-4 border-t border-blue-gray-50">
+        <div className="flex items-center justify-between  border-blue-gray-50">
           <button
             className="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             type="button"
@@ -112,8 +122,6 @@ export default function Leaderboard() {
           >
             Poprzednia
           </button>
-
-         
 
           <button
             className="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
