@@ -19,3 +19,6 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+p,h2,h3,input,a,td{
+  color:black;
+}

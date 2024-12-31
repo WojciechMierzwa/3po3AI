@@ -51,7 +51,7 @@ export default function Home() {
         body: JSON.stringify({
           score,
           date: new Date().toISOString(),
-          user_id: "676bec801df5dfe92749bfe9", // Replace this with the actual user ID
+          user_id: "6773e8d251def5fe445560af", // Replace this with the actual user ID
         }),
       });
   
