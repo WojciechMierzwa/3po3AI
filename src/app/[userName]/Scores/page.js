@@ -54,7 +54,7 @@ export default function UserProfile() {
         <div className="flex flex-col items-center">
           {/* Zdjęcie profilowe */}
           <img
-            src={userData.image}
+            src={"/images/profiles/pepe.jpg"}
             alt={userData.name}
             className="w-24 h-24 rounded-full object-cover border-4 border-blue-500"
           />
