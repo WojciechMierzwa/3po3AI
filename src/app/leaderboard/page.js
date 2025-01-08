@@ -80,7 +80,9 @@ export default function Leaderboard() {
         <div className="p-6 px-0 overflow-scroll">
           {loading ? (
             <p className="text-center text-lg">Ładowanie...</p>
-          ) : (
+            ) : data.length === 0 ? (
+              <p className="text-center text-lg">Brak wyników</p>
+            ) : (
             <table className="w-full mt-4 text-left table-auto min-w-max">
               <thead>
                 <tr>

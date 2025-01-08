@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     const db = client.db("3po3DB");
 
     const dateFilter = {
-      week: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+      week: new Date(new Date().setHours(0, 0, 0, 0) - 7 * 24 * 60 * 60 * 1000),
       month: new Date(new Date().setMonth(new Date().getMonth() - 1)),
       "all-time": new Date(0),
     };
