@@ -2,7 +2,7 @@
 import { useState } from 'react';
 
 export default function Register() {
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');  // Change username to name
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
@@ -15,7 +15,7 @@ export default function Register() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ name, password }),  // Update the body to use name
       });
 
       const data = await response.json();
@@ -24,7 +24,7 @@ export default function Register() {
       }
 
       setMessage('Registration successful!');
-      setUsername('');
+      setName('');  // Reset name instead of username
       setPassword('');
     } catch (error) {
       setMessage(error.message);
@@ -38,12 +38,12 @@ export default function Register() {
         {message && <p className={`mb-4 text-center ${message.includes('successful') ? 'text-green-500' : 'text-red-500'}`}>{message}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Login</label>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Login</label>  {/* Change 'username' to 'name' */}
             <input
               type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="name"  // Change 'username' to 'name'
+              value={name}  // Bind to 'name' instead of 'username'
+              onChange={(e) => setName(e.target.value)}  // Update to setName
               required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />

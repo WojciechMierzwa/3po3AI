@@ -124,7 +124,7 @@ export default function Navbar() {
           {user && (
             <div className="flex items-center space-x-4 sm:ml-auto">
               <span className="text-gray-300 px-3 py-2 rounded-md text-sm font-medium">
-                Zalogowano jako {user.username}
+                Zalogowano jako {user.name}
               </span>
               <button
                 onClick={logout}
@@ -164,7 +164,7 @@ export default function Navbar() {
           ) : (
             <>
               <span className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">
-                Zalogowano jako {user.username}
+                Zalogowano jako {user.name}
               </span>
               <button
                 onClick={logout}

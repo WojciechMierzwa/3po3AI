@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Login() {
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');  // Change username to name
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter(); // Inicjalizacja routera
@@ -18,7 +18,7 @@ export default function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ name, password }),  // Use name instead of username
       });
 
       const data = await response.json();
@@ -26,14 +26,14 @@ export default function Login() {
         throw new Error(data.message || 'Something went wrong');
       }
 
-      // Zapisz token do localStorage
+      // Save the token to localStorage
       localStorage.setItem('token', data.token);
 
-      // Przekierowanie do strony głównej po poprawnym logowaniu
-      router.push('/'); // Przekierowanie do strony głównej
+      // Redirect to the home page after successful login
+      router.push('/'); // Redirect to the home page
 
-      // Wymuszenie przeładowania aplikacji
-      window.location.reload();  // Wymuszenie odświeżenia strony, aby zaktualizować navbar
+      // Force page reload to update the navbar
+      window.location.reload();  // Force refresh to update the navbar
 
     } catch (err) {
       setError(err.message);
@@ -47,12 +47,12 @@ export default function Login() {
         {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Login</label>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Login</label>  {/* Change username to name */}
             <input
               type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="name"  // Change username to name
+              value={name}  // Bind to name instead of username
+              onChange={(e) => setName(e.target.value)}  // Update to setName
               required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
             />

@@ -6,9 +6,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { username, password } = req.body;
+  const { name, password } = req.body;
 
-  if (!username || !password) {
+  if (!name || !password) {
     return res.status(400).json({ message: 'Please provide both username and password' });
   }
 
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     const usersCollection = db.collection('Users'); // Kolekcja 'Users'
 
     // Sprawdzenie, czy użytkownik już istnieje
-    const existingUser = await usersCollection.findOne({ username });
+    const existingUser = await usersCollection.findOne({ name });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
 
     // Tworzenie nowego użytkownika
     const newUser = {
-      username,
+      name,
       password: hashedPassword,
     };
 

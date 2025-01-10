@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import GeminiPrompt from "@/app/components/gemini/GeminiPrompt";
 import Next from "@/app/components/next/next";
 import YouLost from "@/app/components/youlost/youlost";
+import { jwtDecode } from "jwt-decode";
 
 export default function Home() {
   const [gameState, setGameState] = useState("playing"); // "playing", "next", "lost"
@@ -37,31 +38,68 @@ export default function Home() {
   };
 
   const handleIncorrectAnswer = async () => {
+    
     // Update the answers set
     setAnswers((prevAnswers) => new Set(prevAnswers).add(enemy));
     setAnswers(new Set());
   
     // Call API to insert the score with "Test User"
-    try {
-      const response = await fetch("/api/insertScore", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          score,
-          date: new Date().toISOString(),
-          user_id: "6773e8d251def5fe445560af", // Replace this with the actual user ID
-        }),
-      });
-  
-      if (!response.ok) {
-        console.error("Failed to insert score:", await response.text());
+
+    //jesli niezalogowany a jesli zalogowany
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      try {
+        const response = await fetch("/api/insertScore", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            score,
+            date: new Date().toISOString(),
+            user_id: "676c27cd62fdd79627a35feb", // Replace this with the actual user ID
+          }),
+        });
+    
+        if (!response.ok) {
+          console.error("Failed to insert score:", await response.text());
+        }
+      } catch (error) {
+        console.error("Error inserting score:", error);
       }
-    } catch (error) {
-      console.error("Error inserting score:", error);
+    
+    } else {
+      try {
+        // Dekodowanie tokena i pobranie danych użytkownika
+        const decodedToken = jwtDecode(token); // Dekodowanie tokena
+        try {
+          const response = await fetch("/api/insertScore", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              score,
+              date: new Date().toISOString(),
+              user_id: decodedToken.id, // Replace this with the actual user ID
+            }),
+          });
+      
+          if (!response.ok) {
+            console.error("Failed to insert score:", await response.text());
+          }
+        } catch (error) {
+          console.error("Error inserting score:", error);
+        }
+      
+      } catch (error) {
+        console.error('Invalid token, redirecting to login:', error);
+        router.push('/login'); // Przekierowanie w przypadku błędu
+      }
     }
-  
+   
     // Change game state to "lost"
     setGameState("lost");
   };

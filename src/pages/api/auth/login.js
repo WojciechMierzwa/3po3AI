@@ -1,4 +1,4 @@
-import clientPromise from '../../../lib/mongodb';  // Import połączenia MongoDB
+import clientPromise from '../../../lib/mongodb';  // Import MongoDB connection
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -7,34 +7,34 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { username, password } = req.body;
+  const { name, password } = req.body;  // Replace username with name
 
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Please provide both username and password' });
+  if (!name || !password) {
+    return res.status(400).json({ message: 'Please provide both name and password' });  // Adjust error message
   }
 
   try {
-    // Połączenie z MongoDB
+    // Connect to MongoDB
     const client = await clientPromise;
-    const db = client.db('3po3DB');  // Domyślna baza danych
-    const usersCollection = db.collection('Users'); // Kolekcja 'Users'
+    const db = client.db('3po3DB');  // Default database
+    const usersCollection = db.collection('Users'); // Collection 'Users'
 
-    // Szukamy użytkownika po nazwie użytkownika
-    const user = await usersCollection.findOne({ username });
+    // Find user by name
+    const user = await usersCollection.findOne({ name });  // Search by name instead of username
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Porównanie hasła
+    // Compare password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Generowanie tokenu JWT
+    // Generate JWT token
     const token = jwt.sign(
-      { id: user._id, username: user.username },
-      process.env.JWT_SECRET,  // Sekret JWT z .env.local
+      { id: user._id, name: user.name },  // Use name in the payload
+      process.env.JWT_SECRET,  // JWT secret from .env.local
       { expiresIn: '1h' }
     );
 
