@@ -1,5 +1,6 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Emoji from '../components/emoji/emoji'
 
 export default function Register() {
   const [name, setName] = useState('');  // Change username to name
@@ -30,9 +31,30 @@ export default function Register() {
       setMessage(error.message);
     }
   };
+   useEffect(() => {
+      const eyeball = (event) => {
+        const eyes = document.querySelectorAll(".eye")
+        eyes.forEach((eye) => {
+          let x = eye.getBoundingClientRect().left + eye.clientWidth / 2
+          let y = eye.getBoundingClientRect().top + eye.clientHeight / 2
+          let radian = Math.atan2(event.pageX - x, event.pageY - y)
+          let rot = (radian * (180 / Math.PI) * -1) + 270
+          eye.style.transform = `rotate(${rot}deg)`
+        })
+      }
+  
+      document.querySelector("body").addEventListener("mousemove", eyeball)
+  
+      return () => {
+        document.querySelector("body").removeEventListener("mousemove", eyeball)
+      }
+    }, [])
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
+      <div className="flex justify-center mb-6">
+                <Emoji />
+              </div>
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center mb-4">Rejestracja</h2>
         {message && <p className={`mb-4 text-center ${message.includes('successful') ? 'text-green-500' : 'text-red-500'}`}>{message}</p>}
