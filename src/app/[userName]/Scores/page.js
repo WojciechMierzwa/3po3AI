@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import jwt from 'jsonwebtoken';
@@ -7,6 +6,7 @@ import jwt from 'jsonwebtoken';
 export default function UserProfile() {
   const { userName } = useParams();
   const [userData, setUserData] = useState(null);
+  const [lastGame, setLastGame] = useState(null);  // Separate state for last game
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('best');
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,22 +14,38 @@ export default function UserProfile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState("/images/profiles/pepe.jpg");
   const [canEdit, setCanEdit] = useState(false);
+  const [totalPages, setTotalPages] = useState(1); // Track the total pages available
+
+  // Helper function to format the date in a user-friendly format
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString('pl-PL', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`/api/userScores?user=${userName}`);
+        // Fetch user scores with pagination and sorting based on filter
+        const response = await fetch(
+          `/api/userScores?user=${userName}&page=${currentPage}&limit=${resultsPerPage}&sortBy=${filter === 'best' ? 'score' : 'date'}&sortOrder=desc`
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
         }
         const data = await response.json();
         setUserData(data);
-
+  
         // Update profile picture
         if (data.profilePicture) {
           setSelectedImage(data.profilePicture);
         }
-
+  
         // Check if user can edit profile
         const token = localStorage.getItem('token');
         if (token) {
@@ -38,17 +54,36 @@ export default function UserProfile() {
             setCanEdit(true);
           }
         }
+
+        // Update total pages for pagination
+        const totalScores = data.scores.length; // Total number of scores
+        const totalPages = Math.ceil(totalScores / resultsPerPage); // Calculate total pages
+        setTotalPages(totalPages);
       } catch (error) {
         console.error('Error fetching user data:', error);
       } finally {
         setLoading(false);
       }
     };
+  
+    const fetchLastGame = async () => {
+      try {
+        const response = await fetch(`/api/userScores?user=${userName}&limit=1&sortBy=date&sortOrder=desc`); // Fetch only the latest game
+        if (!response.ok) {
+          throw new Error('Failed to fetch last game');
+        }
+        const data = await response.json();
+        setLastGame(data.scores[0] || {}); // Set the first score from the fetched data as the last game
+      } catch (error) {
+        console.error('Error fetching last game:', error);
+      }
+    };
 
     if (userName) {
       fetchUserData();
+      fetchLastGame();  // Fetch last game separately to avoid sorting issues
     }
-  }, [userName]);
+  }, [userName, currentPage, filter, resultsPerPage]);
 
   if (loading) {
     return <p className="text-center text-lg text-blue-500">Ładowanie...</p>;
@@ -111,7 +146,12 @@ export default function UserProfile() {
           <h2 className="text-3xl font-semibold text-gray-800 mt-4">{userData.name}</h2>
         </div>
         <div className="mt-6 space-y-6">
-          <p><strong>Ostatnia gra:</strong> {new Date(userData.lastGame?.date).toLocaleString()} <strong>Wynik:</strong> {userData.lastGame?.score}</p>
+          {/* Display the Last Game info */}
+          {lastGame ? (
+            <p><strong>Ostatnia gra:</strong> {formatDate(lastGame.date)} <strong>Wynik:</strong> {lastGame.score}</p>
+          ) : (
+            <p><strong>Ostatnia gra:</strong> Brak danych</p>
+          )}
           <p><strong>Najwyższy wynik:</strong> {userData.bestScore}</p>
           <p><strong>Pozycja w rankingu:</strong> #{userData.ranking}</p>
         </div>
@@ -139,13 +179,32 @@ export default function UserProfile() {
             <tbody>
               {userData.scores.map((score, idx) => (
                 <tr key={idx} className="border-b">
-                  <td>{idx + 1}</td>
+                  <td>{(currentPage - 1) * resultsPerPage + idx + 1}</td>
                   <td>{score.score}</td>
-                  <td>{new Date(score.date).toLocaleString()}</td>
+                  <td>{formatDate(score.date)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+          
+          {/* Pagination */}
+          <div className="flex justify-between mt-4">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+              className="px-4 py-2 bg-gray-300 rounded-full"
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <p className="text-lg">Page {currentPage} of {totalPages}</p>
+            <button
+              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+              className="px-4 py-2 bg-gray-300 rounded-full"
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
 

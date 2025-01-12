@@ -3,6 +3,10 @@ import { ObjectId } from "mongodb";
 
 export default async function handler(req, res) {
   const { user } = req.query;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const sortBy = req.query.sortBy || "score"; // Default sorting by score
+  const sortOrder = req.query.sortOrder === "desc" ? -1 : 1; // Sort by descending or ascending order
 
   if (!user) {
     return res.status(400).json({ error: "User is required" });
@@ -43,18 +47,29 @@ export default async function handler(req, res) {
         entry.user_id.toString() === userData._id.toString()
     ) + 1;
 
-    // Fetch all scores for the user
-    const userScores = await db
-      .collection("Scores")
-      .find({ user_id: userData._id })
-      .sort({ date: -1 })
-      .toArray();
+    // Fetch all scores for the user, with pagination and sorting
+    const userScores = await db.collection("Scores").aggregate([
+      {
+        $lookup: {
+          from: "Users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      { $unwind: "$user" },
+      { $match: { "user.name": user } },
+      { $sort: { [sortBy]: sortOrder } },
+      { $skip: (page - 1) * limit }, // Apply pagination
+      { $limit: limit }, // Limit results
+      { $project: { score: 1, date: 1, _id: 0 } },
+    ]).toArray();
 
-    // Respond with user details and scores
+    // Respond with user details, scores, and ranking information
     res.status(200).json({
       name: userData.name,
-      profilePicture: userData.profilePicture || "/images/profiles/pepe.jpg", // Use profilePicture field
-      lastGame: userScores[0] || {},
+      profilePicture: userData.profilePicture || "/images/profiles/pepe.jpg", // Use profilePicture if available
+      lastGame: userScores[0] || {}, // Last game details (first score in the sorted list)
       bestScore,
       ranking: rankingPosition,
       scores: userScores,

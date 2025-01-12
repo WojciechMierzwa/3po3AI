@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     const newUser = {
       name,
       password: hashedPassword,
-      profilePicture: '/images/profiles/default.jpg', // Default profile picture
+      profilePicture: '/images/profiles/pepe.jpg', // Default profile picture
     };
 
     // Insert the new user into the database
