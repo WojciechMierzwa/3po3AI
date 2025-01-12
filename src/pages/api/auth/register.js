@@ -13,32 +13,32 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Połączenie z MongoDB
     const client = await clientPromise;
-    const db = client.db('3po3DB'); // Domyślna baza danych, jeśli nie podano innej w URI
-    const usersCollection = db.collection('Users'); // Kolekcja 'Users'
+    const db = client.db('3po3DB'); 
+    const usersCollection = db.collection('Users');
 
-    // Sprawdzenie, czy użytkownik już istnieje
+    // Check if user already exists
     const existingUser = await usersCollection.findOne({ name });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Hashowanie hasła
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Tworzenie nowego użytkownika
+    // Create a new user with a default profile picture
     const newUser = {
       name,
       password: hashedPassword,
+      profilePicture: '/images/profiles/default.jpg', // Default profile picture
     };
 
-    // Zapis użytkownika do bazy danych
+    // Insert the new user into the database
     const result = await usersCollection.insertOne(newUser);
 
     res.status(201).json({
       message: 'User registered successfully',
-      user_id: result.insertedId, // Zwracamy ID nowego użytkownika
+      user_id: result.insertedId,
     });
   } catch (error) {
     console.error(error);

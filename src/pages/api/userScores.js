@@ -12,20 +12,23 @@ export default async function handler(req, res) {
     const client = await clientPromise;
     const db = client.db("3po3DB");
 
-    // Pobierz użytkownika
-    const userData = await db.collection("Users").findOne({ name: user });
+    // Fetch user details including profilePicture
+    const userData = await db.collection("Users").findOne(
+      { name: user },
+      { projection: { name: 1, profilePicture: 1 } } // Include only relevant fields
+    );
     if (!userData) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Pobierz wszystkie wyniki posortowane od największego do najmniejszego
+    // Fetch all scores sorted from highest to lowest
     const allScores = await db
       .collection("Scores")
       .find({})
       .sort({ score: -1 })
       .toArray();
 
-    // Znajdź najlepszy wynik użytkownika i jego pozycję w rankingu
+    // Find the user's best score and ranking position
     const userBestScore = await db
       .collection("Scores")
       .find({ user_id: userData._id })
@@ -40,16 +43,17 @@ export default async function handler(req, res) {
         entry.user_id.toString() === userData._id.toString()
     ) + 1;
 
-    // Pobierz wszystkie wyniki użytkownika
+    // Fetch all scores for the user
     const userScores = await db
       .collection("Scores")
       .find({ user_id: userData._id })
       .sort({ date: -1 })
       .toArray();
 
+    // Respond with user details and scores
     res.status(200).json({
       name: userData.name,
-      image: userData.image || "/images/default.jpg",
+      profilePicture: userData.profilePicture || "/images/profiles/pepe.jpg", // Use profilePicture field
       lastGame: userScores[0] || {},
       bestScore,
       ranking: rankingPosition,

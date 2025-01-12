@@ -18,14 +18,13 @@ export default async function handler(req, res) {
       "all-time": new Date(0),
     };
 
-
     const scores = await db.collection("Scores").aggregate([
       {
         $match: { date: { $gte: dateFilter[period] } },
       },
       {
         $addFields: {
-          user_id: { $toObjectId: "$user_id" }, // Upewnij się, że jest ObjectId
+          user_id: { $toObjectId: "$user_id" }, // Ensure it's an ObjectId
         },
       },
       {
@@ -37,25 +36,35 @@ export default async function handler(req, res) {
         },
       },
       {
-        $unwind: "$user", // Rozwija tablicę użytkowników
+        $unwind: "$user", // Flatten the user array
       },
       {
         $project: {
           _id: 1,
           score: 1,
           name: "$user.name",
+          profilePicture: { $ifNull: ["$user.profilePicture", "/images/profiles/pepe.jpg"] }, // Use default if no profile picture
           date: 1,
         },
       },
       {
-        $sort: { score: -1 }, // Sortuj wyniki malejąco
+        $sort: { score: -1 }, // Sort by score in descending order
       },
       {
-        $limit: 50, // Pobierz tylko top 50
+        $limit: 50, // Limit to top 50
       },
     ]).toArray();
 
-    res.status(200).json(scores);
+    // Map the result to ensure profilePicture is included with fallback
+    const leaderboard = scores.map((entry) => ({
+      _id: entry._id,
+      score: entry.score,
+      name: entry.name,
+      image: entry.profilePicture,
+      date: entry.date,
+    }));
+
+    res.status(200).json(leaderboard);
   } catch (error) {
     console.error("Error during leaderboard aggregation: ", error);
     res.status(500).json({ error: "Internal Server Error", details: error.message });

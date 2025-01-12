@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Import routera
-import { jwtDecode } from 'jwt-decode'; // Dekodowanie tokena
+import { useRouter } from 'next/navigation';
+import { jwtDecode } from 'jwt-decode';
 import '@/app/globals.css';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null); // Stan dla użytkownika
+  const [user, setUser] = useState(null);
   const router = useRouter();
 
   const toggleMenu = () => {
@@ -16,34 +16,31 @@ export default function Navbar() {
   };
 
   const logout = () => {
-    localStorage.removeItem('token'); // Usuwamy token
-    setUser(null); // Czyścimy stan użytkownika
-    router.push('/login'); // Przekierowujemy na stronę logowania
+    localStorage.removeItem('token');
+    setUser(null);
+    router.push('/login');
   };
 
   useEffect(() => {
-    // Funkcja sprawdzająca czy użytkownik jest zalogowany
     const token = localStorage.getItem('token');
     if (token) {
-      const decodedToken = jwtDecode(token); // Dekodowanie tokena
-      setUser(decodedToken); // Ustawienie danych użytkownika
+      const decodedToken = jwtDecode(token);
+      setUser(decodedToken);
     }
-  }, []); // Uruchamiamy tylko raz przy pierwszym renderze
+  }, []);
 
   useEffect(() => {
-    // Nasłuchujemy zmiany w localStorage
     const handleStorageChange = () => {
       const token = localStorage.getItem('token');
       if (token) {
         const decodedToken = jwtDecode(token);
-        setUser(decodedToken); // Zaktualizowanie stanu użytkownika
+        setUser(decodedToken);
       } else {
-        setUser(null); // Jeśli token nie istnieje, to wylogowujemy
+        setUser(null);
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
-
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
@@ -80,7 +77,7 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Sekcja po lewej stronie */}
+          {/* Left Section */}
           <div className="flex items-center justify-start w-full space-x-4">
             <Link href="/" className="text-2xl font-bold text-white">
               3po3AI
@@ -120,9 +117,15 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Sekcja po prawej stronie (po zalogowaniu) */}
+          {/* Right Section (Logged In) */}
           {user && (
             <div className="flex items-center space-x-4 sm:ml-auto">
+              <Link
+                href={`/${user.name}/Scores`} // Link to the user's profile
+                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Profil
+              </Link>
               <span className="text-gray-300 px-3 py-2 rounded-md text-sm font-medium">
                 Zalogowano jako {user.name}
               </span>
@@ -144,7 +147,7 @@ export default function Navbar() {
             href="/"
             className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
           >
-            Home
+            Strona główna
           </Link>
           {!user ? (
             <>
@@ -152,17 +155,23 @@ export default function Navbar() {
                 href="/login"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
               >
-                Login
+                Logowanie
               </Link>
               <Link
                 href="/register"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
               >
-                Register
+                Rejestracja
               </Link>
             </>
           ) : (
             <>
+              <Link
+                href={`/${user.name}/Scores`} // Mobile link to user's profile
+                className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              >
+                Profil
+              </Link>
               <span className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">
                 Zalogowano jako {user.name}
               </span>
