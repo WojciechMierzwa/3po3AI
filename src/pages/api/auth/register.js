@@ -3,13 +3,13 @@ import bcrypt from 'bcrypt';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
+    return res.status(405).json({ message: 'Coś nei działa' });
   }
 
   const { name, password } = req.body;
 
   if (!name || !password) {
-    return res.status(400).json({ message: 'Please provide both username and password' });
+    return res.status(400).json({ message: 'Proszę podaj login i hasło' });
   }
 
   try {
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     // Check if user already exists
     const existingUser = await usersCollection.findOne({ name });
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: 'Użytkownik już instnieje' });
     }
 
     // Hash the password
@@ -37,11 +37,11 @@ export default async function handler(req, res) {
     const result = await usersCollection.insertOne(newUser);
 
     res.status(201).json({
-      message: 'User registered successfully',
+      message: 'Użytkownik zarejestrowany',
       user_id: result.insertedId,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Błąd systemu' });
   }
 }

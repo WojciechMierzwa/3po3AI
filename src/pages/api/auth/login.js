@@ -4,13 +4,13 @@ import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
+    return res.status(405).json({ message: 'Nie działa' });
   }
 
   const { name, password } = req.body;
 
   if (!name || !password) {
-    return res.status(400).json({ message: 'Please provide both name and password' });
+    return res.status(400).json({ message: 'Proszę podaj login i hasło' });
   }
 
   try {
@@ -21,13 +21,13 @@ export default async function handler(req, res) {
     // Find user by name
     const user = await usersCollection.findOne({ name });
     if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: 'Niepoprawne dane' });
     }
 
     // Compare password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: 'Niepoprawne dane' });
     }
 
     // Ensure the user has a profilePicture field
@@ -65,12 +65,12 @@ export default async function handler(req, res) {
     res.status(200).json({
       token,
       message: rewardGiven
-        ? `Login successful! You have been awarded 10 coins.`
-        : `Login successful! No reward today, you've already claimed it.`,
+        ? `Pierwsze logowanie dziś. Masz w nagrodę 10 🪙`
+        : `Już dostałeś swoją nagrodę. Zaloguj się jutro po kolejną`,
       coins: user.coins + (rewardGiven ? 10 : 0), // Updated coin balance
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Something went wrong' });
+    res.status(500).json({ message: 'Coś nie działa' });
   }
 }

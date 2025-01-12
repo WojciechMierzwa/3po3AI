@@ -128,6 +128,7 @@ export default function Navbar() {
               </Link>
               <span className="text-gray-300 px-3 py-2 rounded-md text-sm font-medium">
                 Zalogowano jako {user.name}
+                
               </span>
               <button
                 onClick={logout}

@@ -144,7 +144,7 @@ export default function UserProfile() {
             onClick={handleImageClick}
           />
           <h2 className="text-3xl font-semibold text-gray-800 mt-4">{userData.name}</h2>
-          <p className="text-lg mt-2">Coins: {userData.coins}</p> {/* Display coins */}
+          <p className="text-lg mt-2">🪙 x {userData.coins}</p> {/* Display coins */}
         </div>
         <div className="mt-6 space-y-6">
           {/* Display the Last Game info */}
@@ -195,7 +195,7 @@ export default function UserProfile() {
               className="px-4 py-2 bg-gray-300 rounded-full"
               disabled={currentPage === 1}
             >
-              Previous
+              Poprzednia
             </button>
             <p className="text-lg">Page {currentPage} of {totalPages}</p>
             <button
@@ -203,7 +203,7 @@ export default function UserProfile() {
               className="px-4 py-2 bg-gray-300 rounded-full"
               disabled={currentPage === totalPages}
             >
-              Next
+              Następna
             </button>
           </div>
         </div>
