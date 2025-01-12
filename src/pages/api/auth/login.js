@@ -38,6 +38,23 @@ export default async function handler(req, res) {
       );
     }
 
+    // Check for daily login reward
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to midnight for daily checks
+    let rewardGiven = false;
+    if (!user.lastRewardDate || new Date(user.lastRewardDate) < today) {
+      // Reward user with coins if they haven't received it today
+      const coinsToAward = 10; // Adjust the reward amount as needed
+      await usersCollection.updateOne(
+        { _id: user._id },
+        {
+          $set: { lastRewardDate: new Date() }, // Update last reward date to today
+          $inc: { coins: coinsToAward }, // Increment coin balance
+        }
+      );
+      rewardGiven = true;
+    }
+
     // Generate JWT token
     const token = jwt.sign(
       { id: user._id, name: user.name },
@@ -45,7 +62,13 @@ export default async function handler(req, res) {
       { expiresIn: '1h' }
     );
 
-    res.status(200).json({ token });
+    res.status(200).json({
+      token,
+      message: rewardGiven
+        ? `Login successful! You have been awarded 10 coins.`
+        : `Login successful! No reward today, you've already claimed it.`,
+      coins: user.coins + (rewardGiven ? 10 : 0), // Updated coin balance
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Something went wrong' });

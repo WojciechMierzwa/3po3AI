@@ -144,6 +144,7 @@ export default function UserProfile() {
             onClick={handleImageClick}
           />
           <h2 className="text-3xl font-semibold text-gray-800 mt-4">{userData.name}</h2>
+          <p className="text-lg mt-2">Coins: {userData.coins}</p> {/* Display coins */}
         </div>
         <div className="mt-6 space-y-6">
           {/* Display the Last Game info */}

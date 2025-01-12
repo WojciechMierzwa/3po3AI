@@ -16,10 +16,10 @@ export default async function handler(req, res) {
     const client = await clientPromise;
     const db = client.db("3po3DB");
 
-    // Fetch user details including profilePicture
+    // Fetch user details including profilePicture and coins
     const userData = await db.collection("Users").findOne(
       { name: user },
-      { projection: { name: 1, profilePicture: 1 } } // Include only relevant fields
+      { projection: { name: 1, profilePicture: 1, coins: 1 } } // Include coins field here
     );
     if (!userData) {
       return res.status(404).json({ error: "User not found" });
@@ -65,10 +65,11 @@ export default async function handler(req, res) {
       { $project: { score: 1, date: 1, _id: 0 } },
     ]).toArray();
 
-    // Respond with user details, scores, and ranking information
+    // Respond with user details, scores, ranking information, and coins
     res.status(200).json({
       name: userData.name,
       profilePicture: userData.profilePicture || "/images/profiles/pepe.jpg", // Use profilePicture if available
+      coins: userData.coins || 0,  // Include coins data
       lastGame: userScores[0] || {}, // Last game details (first score in the sorted list)
       bestScore,
       ranking: rankingPosition,

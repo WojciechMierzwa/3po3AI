@@ -9,6 +9,8 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter(); // Inicjalizacja routera
+  const [rewardMessage, setRewardMessage] = useState(''); // New state for reward message
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,11 +32,13 @@ export default function Login() {
       // Save the token to localStorage
       localStorage.setItem('token', data.token);
 
-      // Redirect to the home page after successful login
-      router.push('/'); // Redirect to the home page
-
-      // Force page reload to update the navbar
-      window.location.reload();  // Force refresh to update the navbar
+        // Display reward message
+        setRewardMessage(data.message); // Backend sends reward message
+        setTimeout(() => {
+          // Redirect to the home page after showing the reward
+          router.push('/');
+          window.location.reload(); // Force refresh to update the navbar
+        }, 2000); // Wait 2 seconds before redirecting
 
     } catch (err) {
       setError(err.message);
@@ -67,6 +71,7 @@ export default function Login() {
         </div>
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center mb-4">Logowanie</h2>
+        {rewardMessage && <p className="text-green-500">{rewardMessage}</p>} {/* Reward Message */}
         {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
