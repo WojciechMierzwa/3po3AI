@@ -164,30 +164,32 @@ export default function UserProfile() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-blue-600 text-white">
-                <th>#</th>
-                <th>Wynik</th>
-                <th>Data</th>
-              </tr>
-            </thead>
-            <tbody>
-              {userData.scores?.length > 0 ? (
-                userData.scores.map((score, idx) => (
-                  <tr key={idx} className="border-b">
-                    <td>{(currentPage - 1) * resultsPerPage + idx + 1}</td>
-                    <td>{score.score}</td>
-                    <td>{formatDate(score.date)}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="3" className="text-center">Brak wyników</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+  <table className="w-full border-collapse text-center">
+    <thead>
+      <tr className="bg-blue-600 text-white">
+        <th className="py-2">#</th>
+        <th className="py-2">Wynik</th>
+        <th className="py-2">Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      {userData.scores?.length > 0 ? (
+        userData.scores.map((score, idx) => (
+          <tr key={idx} className="border-b">
+            <td className="py-2">{(currentPage - 1) * resultsPerPage + idx + 1}</td>
+            <td className="py-2">{score.score}</td>
+            <td className="py-2">{formatDate(score.date)}</td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan="3" className="py-4 text-center">Brak wyników</td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
+
 
           {/* Pagination */}
           <div className="flex justify-between mt-4">
@@ -208,7 +210,6 @@ export default function UserProfile() {
             </button>
           </div>
         </div>
-      </div>
 
       {/* Modal for selecting profile picture */}
       {isModalOpen && (
