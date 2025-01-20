@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { useState } from 'react';
-import Share from '@/app/components/share/share'; // Import the Share component
+import Share from '@/app/components/share/share';
 import '@/app/globals.css';
 
 export default function YouLost({ message, stats, onRestart }) {
@@ -23,7 +23,6 @@ export default function YouLost({ message, stats, onRestart }) {
           Zacznij od nowa  🔄
         </button>
         
-        {/* Share Button */}
         <button
           onClick={openPopup} 
           className="text-2xl w-full mt-4 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
@@ -32,7 +31,6 @@ export default function YouLost({ message, stats, onRestart }) {
         </button>
       </div>
 
-      {/* Share Popup */}
       {isPopupOpen && (
         <Share stats={stats} closePopup={closePopup} />
       )}
