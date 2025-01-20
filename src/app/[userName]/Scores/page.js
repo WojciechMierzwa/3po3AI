@@ -56,9 +56,7 @@ export default function UserProfile() {
         }
 
         // Update total pages for pagination
-        const totalScores = data.scores.length; // Total number of scores
-        const totalPages = Math.ceil(totalScores / resultsPerPage); // Calculate total pages
-        setTotalPages(totalPages);
+        setTotalPages(data.totalPages);
       } catch (error) {
         console.error('Error fetching user data:', error);
       } finally {
@@ -103,7 +101,7 @@ export default function UserProfile() {
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("User not authenticated");
-
+  
       const response = await fetch("/api/updateProfilePicture", {
         method: "POST",
         headers: {
@@ -112,12 +110,12 @@ export default function UserProfile() {
         },
         body: JSON.stringify({ profilePicture: image }),
       });
-
+  
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result.error || "Failed to update profile picture");
       }
-
+  
       // Update the selected image and close the modal
       setSelectedImage(image);
       setIsModalOpen(false);
